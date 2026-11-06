@@ -1,8 +1,14 @@
 package com.example.myarsitekturmvvm.view.uicontroller
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
 enum class Navigasi {
@@ -16,5 +22,24 @@ fun SiswaApp(
     viewModel: SiswaViewModel = viewModel(),
     navController : NavHostController = rememberNavController()
 ) {
+    Scaffold { isiRuang->
+        //edit 2 : tambahkan variabel uiState
+        val uiState = viewModel.statusUI.collectAsState()
+        NavHost(
+            navController = navController,
+            startDestination = com.example.mvvm.view.uicontroller.Navigasi.Formulir.name,
 
+            modifier = Modifier.padding(isiRuang)){
+            composable(route = com.example.mvvm.view.uicontroller.Navigasi.Formulir.name){
+                //edit 3 : tambahkan variable konteks
+                val konteks = LocalContext.current
+                FormSiswa(
+                    //edit 4 : parameter pilihanJK dan onSubmitButtonClicked
+                    pilihanJK = JenisK.map { id -> konteks.resources.getString(id) },
+                    onSubmitButtonClicked = {
+                        viewModel.setSiswa(it)
+                        navController.navigate(com.example.mvvm.view.uicontroller.Navigasi.Detail.name)
+                    }
+                )
+            }
 }
