@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.myarsitekturmvvm.viewmodel.SiswaViewModel
 
 enum class Navigasi {
     Formulir,
@@ -22,15 +23,16 @@ fun SiswaApp(
     viewModel: SiswaViewModel = viewModel(),
     navController : NavHostController = rememberNavController()
 ) {
-    Scaffold { isiRuang->
+    Scaffold { isiRuang ->
         //edit 2 : tambahkan variabel uiState
         val uiState = viewModel.statusUI.collectAsState()
         NavHost(
             navController = navController,
             startDestination = com.example.mvvm.view.uicontroller.Navigasi.Formulir.name,
 
-            modifier = Modifier.padding(isiRuang)){
-            composable(route = com.example.mvvm.view.uicontroller.Navigasi.Formulir.name){
+            modifier = Modifier.padding(isiRuang)
+        ) {
+            composable(route = com.example.mvvm.view.uicontroller.Navigasi.Formulir.name) {
                 //edit 3 : tambahkan variable konteks
                 val konteks = LocalContext.current
                 FormSiswa(
@@ -42,4 +44,16 @@ fun SiswaApp(
                     }
                 )
             }
+
+            composable(route = com.example.mvvm.view.uicontroller.Navigasi.Detail.name){
+                TampilSiswa(
+                    //edit 5 : parameter statusUiSiswa
+                    statusUiSiswa = uiState.value,
+                    onBackButtonClicked = { cancelAndBackToFormulir(navController) }
+                )
+            }
+        }
+    }
 }
+
+fun composable(route: Any, function: Any) {}
