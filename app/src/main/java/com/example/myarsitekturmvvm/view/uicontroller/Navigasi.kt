@@ -2,6 +2,7 @@ package com.example.myarsitekturmvvm.view.uicontroller
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -10,6 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.myarsitekturmvvm.model.DataJK.JenisK
 import com.example.myarsitekturmvvm.viewmodel.SiswaViewModel
 
 enum class Navigasi {
@@ -17,6 +19,7 @@ enum class Navigasi {
     Detail
 }
 
+@Composable
 fun SiswaApp(
     //edit 1 : parameter viewModel
     modifier: Modifier = Modifier,
@@ -28,11 +31,11 @@ fun SiswaApp(
         val uiState = viewModel.statusUI.collectAsState()
         NavHost(
             navController = navController,
-            startDestination = com.example.mvvm.view.uicontroller.Navigasi.Formulir.name,
+            startDestination = Navigasi.Formulir.name,
 
             modifier = Modifier.padding(isiRuang)
         ) {
-            composable(route = com.example.mvvm.view.uicontroller.Navigasi.Formulir.name) {
+            composable(route = Navigasi.Formulir.name) {
                 //edit 3 : tambahkan variable konteks
                 val konteks = LocalContext.current
                 FormSiswa(
@@ -40,12 +43,12 @@ fun SiswaApp(
                     pilihanJK = JenisK.map { id -> konteks.resources.getString(id) },
                     onSubmitButtonClicked = {
                         viewModel.setSiswa(it)
-                        navController.navigate(com.example.mvvm.view.uicontroller.Navigasi.Detail.name)
+                        navController.navigate(Navigasi.Detail.name)
                     }
                 )
             }
 
-            composable(route = com.example.mvvm.view.uicontroller.Navigasi.Detail.name){
+            composable(route = Navigasi.Detail.name){
                 TampilSiswa(
                     //edit 5 : parameter statusUiSiswa
                     statusUiSiswa = uiState.value,
@@ -56,4 +59,9 @@ fun SiswaApp(
     }
 }
 
+private fun cancelAndBackToFormulir(
+    navController: NavHostController
+){
+    navController.popBackStack(Navigasi.Formulir.name, inclusive = false)
+}
 fun composable(route: Any, function: Any) {}
