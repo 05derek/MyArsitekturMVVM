@@ -119,7 +119,6 @@ fun FormSiswa(
             ) {
                 Text(stringResource(R.string.submit))
             }
-
         }
     }
 }
